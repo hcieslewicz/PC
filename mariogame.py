@@ -1,7 +1,7 @@
 import collections
 
 
-class marioSavingThePrincess():
+class MarioSavingThePrincess:
 
     def __init__(self, size, grid):
         self.height = size
@@ -13,15 +13,15 @@ class marioSavingThePrincess():
         self.freeCell = "-"
         self.validGridValues = ['m', 'p', '-', 'x']
 
-    def validateGrid(self):
-        m = None # mario position
-        p = None # princess position
+    def validate_grid(self):
+        m = None    # mario position
+        p = None    # princess position
 
         for i in range(0, self.height):
             for j in range(0, self.width):
 
                 if self.grid[i][j] == self.mario:
-                    m = (i,j)
+                    m = (i, j)
                 elif self.grid[i][j] == self.princess:
                     p = (i, j)
                 elif self.grid[i][j] in self.validGridValues:
@@ -29,18 +29,19 @@ class marioSavingThePrincess():
                 else:
                     return False, m
         if not m or not p:
-            return False,m
+            return False, m
 
         return True, m
 
-    def convertToDirection(self, paths):
-        convertedPath = []
+    @staticmethod
+    def convert_to_direction(paths):
+        converted_path = []
         for path in paths:
-            x ,y = path[0]
+            x, y = path[0]
             tmp = []
             for coordinate in path[1:]:
                 x2, y2 = coordinate
-                if x - x2 >0:
+                if x - x2 > 0:
                     tmp.append("UP")
                     x = x2
                 elif x - x2 < 0:
@@ -52,56 +53,58 @@ class marioSavingThePrincess():
                 elif y - y2 < 0:
                     tmp.append("RIGHT")
                     y = y2
-            convertedPath.append(tuple(tmp))
-        return convertedPath
+            converted_path.append(tuple(tmp))
+        return converted_path
 
     def bfs(self, start):
         queue = collections.deque([[start]])
 
-        foundInLeyer = None
+        found_in_leyer = None
         paths = []
         dimension = self.height * self.width
 
         while queue:
             path = queue.popleft()
-            if (foundInLeyer and (len(path)) > foundInLeyer) or len(path)> dimension:
+            if (found_in_leyer and (len(path)) > found_in_leyer) or len(path) > dimension:
                 continue
 
             x, y = path[-1]
             if self.grid[x][y] == self.princess:
                 paths.append(path)
 
-                if not foundInLeyer:
-                    foundInLeyer = len(path)
+                if not found_in_leyer:
+                    found_in_leyer = len(path)
 
             for x2, y2 in ((x+1, y), (x-1, y), (x, y+1), (x, y-1)):
-                if 0 <= x2 < self.width and 0 <= y2 < self.height and self.grid[x2][y2] != self.obstacle and (x2, y2) not in path:
+                if 0 <= x2 < self.width and 0 <= y2 < self.height and self.grid[x2][y2] != self.obstacle \
+                        and (x2, y2) not in path:
                     queue.append(path + [(x2, y2)])
 
         return paths
 
-    def getErrorFlag(self, isGridValid):
-        if isGridValid:
+    @staticmethod
+    def get_error_flag(is_grid_valid):
+        if is_grid_valid:
             return '0b0'
         else:
             return '0b1'
 
     def play(self):
 
-        isGridValid, marioPosition = self.validateGrid()
+        is_grid_valid, mario_position = self.validate_grid()
 
         paths = []
-        if isGridValid:
-            paths = self.bfs(marioPosition)
+        if is_grid_valid:
+            paths = self.bfs(mario_position)
             print(len(paths), paths)
 
-        errorFlag = self.getErrorFlag(isGridValid)
-        convertedPath = self.convertToDirection(paths)
+        error_flag = self.get_error_flag(is_grid_valid)
+        converted_path = self.convert_to_direction(paths)
 
-        return errorFlag, convertedPath
+        return error_flag, converted_path
 
 
 if __name__ == "__main__":
-    mariogame = marioSavingThePrincess(3, grid = ["--m", "-x-", "p--"])
+    mariogame = MarioSavingThePrincess(3, ["--m", "-x-", "p--"])
     result = mariogame.play()
     print(result)
