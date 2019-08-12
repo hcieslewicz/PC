@@ -17,9 +17,13 @@ class MarioSavingThePrincess:
         m = None    # mario position
         p = None    # princess position
 
+        print(self.height)
+        print(self.width)
+        print(self.grid)
+
         for i in range(0, self.height):
             for j in range(0, self.width):
-
+                print(i,j)
                 if self.grid[i][j] == self.mario:
                     m = (i, j)
                 elif self.grid[i][j] == self.princess:
