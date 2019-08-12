@@ -1,17 +1,17 @@
 import collections
+from utilities.utilities import boolen_to_binary
 
 
 class MarioSavingThePrincess:
-
     def __init__(self, size, grid):
         self.height = size
         self.width = size
         self.grid = grid
-        self.princess = "p"
         self.mario = "m"
+        self.princess = "p"
         self.obstacle = "x"
         self.freeCell = "-"
-        self.validGridValues = ['m', 'p', '-', 'x']
+        self.validGridValues = [self.mario, self.princess,  self.obstacle, self.freeCell]
 
     def validate_grid(self):
         m = None    # mario position
@@ -23,7 +23,7 @@ class MarioSavingThePrincess:
 
         for i in range(0, self.height):
             for j in range(0, self.width):
-                print(i,j)
+                print(i, j)
                 if self.grid[i][j] == self.mario:
                     m = (i, j)
                 elif self.grid[i][j] == self.princess:
@@ -86,13 +86,6 @@ class MarioSavingThePrincess:
 
         return paths
 
-    @staticmethod
-    def get_error_flag(is_grid_valid):
-        if is_grid_valid:
-            return '0b0'
-        else:
-            return '0b1'
-
     def play(self):
 
         is_grid_valid, mario_position = self.validate_grid()
@@ -102,7 +95,7 @@ class MarioSavingThePrincess:
             paths = self.bfs(mario_position)
             print(len(paths), paths)
 
-        error_flag = self.get_error_flag(is_grid_valid)
+        error_flag = boolen_to_binary(is_grid_valid)
         converted_path = self.convert_to_direction(paths)
 
         return error_flag, converted_path
