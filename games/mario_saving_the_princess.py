@@ -1,8 +1,17 @@
+import sys
 import collections
-from utilities.utilities import boolen_to_binary
+from models.utilities.utilities import boolean_to_binary
 
 
 class MarioSavingThePrincess:
+    """Main class of game 'mario saving the princess'.
+
+
+    :param size (int): Size of the grid.
+    :param grid (list(str)): List of strings for grid declaration.
+    :return: Return two lists. One contain error_flag value in binary representation and second list of strings.
+    """
+
     def __init__(self, size, grid):
         self.height = size
         self.width = size
@@ -14,16 +23,15 @@ class MarioSavingThePrincess:
         self.validGridValues = [self.mario, self.princess,  self.obstacle, self.freeCell]
 
     def validate_grid(self):
-        m = None    # mario position
-        p = None    # princess position
+        """
 
-        print(self.height)
-        print(self.width)
-        print(self.grid)
+        :return:
+        """
+        m = False    # mario position
+        p = False   # princess position
 
         for i in range(0, self.height):
             for j in range(0, self.width):
-                print(i, j)
                 if self.grid[i][j] == self.mario:
                     m = (i, j)
                 elif self.grid[i][j] == self.princess:
@@ -33,6 +41,9 @@ class MarioSavingThePrincess:
                 else:
                     return False, m
         if not m or not p:
+            return False, m
+
+        if self.height <= 0 or self.height >  sys.maxsize:
             return False, m
 
         return True, m
@@ -93,9 +104,8 @@ class MarioSavingThePrincess:
         paths = []
         if is_grid_valid:
             paths = self.bfs(mario_position)
-            print(len(paths), paths)
 
-        error_flag = boolen_to_binary(is_grid_valid)
+        error_flag = boolean_to_binary(not is_grid_valid)
         converted_path = self.convert_to_direction(paths)
 
         return error_flag, converted_path
